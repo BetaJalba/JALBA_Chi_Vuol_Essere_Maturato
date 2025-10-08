@@ -1,16 +1,24 @@
 import com.google.gson.*;
 import com.google.gson.GsonBuilder;
 
+import java.util.Scanner;
+
 
 public class Main {
     public static void main(String[] args) {
         ApiClient apiClient = new ApiClient();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Scanner sc = new Scanner(System.in);
 
-        String rawJson = apiClient.fetchQuestions(5, "easy", "multiple");
-        JsonElement jsonElement = JsonParser.parseString(rawJson);
-        String prettyJson = gson.toJson(jsonElement);
+        System.out.print("Insert el numero: ");
+        int amount = sc.nextInt();
 
-        System.out.println(prettyJson);
+        ApiResponse apiResponse = apiClient.fetchQuestions(amount, "easy", "multiple");
+
+        if (apiResponse.responseCode != 0)
+            return;
+
+        for (ApiQuestion question : apiResponse.results) {
+            System.out.println(question.question);
+        }
     }
 }
